@@ -19,77 +19,12 @@ security:
   - BearerAuth: []
 
 tags:
-  - name: Auth
   - name: Users
   - name: Categories
   - name: Products
   - name: Expenses
 
 paths:
-
-  /auth/register:
-    post:
-      tags: [Auth]
-      summary: Register a new user
-      security: []   # public
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RegisterRequest"
-      responses:
-        "201":
-          description: Registered
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthResponse"
-        "409": { $ref: "#/components/responses/Conflict" }
-        "422": { $ref: "#/components/responses/UnprocessableEntity" }
-
-  /auth/login:
-    post:
-      tags: [Auth]
-      summary: Login with email and password
-      security: []   # public
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LoginRequest"
-      responses:
-        "200":
-          description: Authenticated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthResponse"
-        "401": { $ref: "#/components/responses/Unauthorized" }
-
-  /auth/social-login/google:
-    post:
-      tags: [Auth]
-      summary: Login with Google service provider
-      description: >
-        Accepts a Google ID token in the `Authorization` header (Bearer token).
-        The backend verifies the token with Google and returns the app's own tokens.
-      security: []   # public – client sends Google ID token in Authorization header
-      responses:
-        "200":
-          description: Authenticated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthResponse"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
   /me:
     get:
       tags: [Users]
