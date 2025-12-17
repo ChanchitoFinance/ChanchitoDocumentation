@@ -9,7 +9,7 @@
    - [PayU Latam](#3-payu-latam)
 3. [Bolivian Payment Solutions](#bolivian-payment-solutions)
    - [Mercado Pago](#1-mercado-pago)
-   - [AirTM + Takenos Virtual Cards](#2-airtm--takenos-virtual-cards)
+   - [Virtual Cards (AirTM, Takenos, etc.)](#2-virtual-cards-airtm-takenos-etc)
 4. [Decision Matrix](#decision-matrix)
 5. [Integration Complexity Comparison](#integration-complexity-comparison)
 6. [Discarded Solutions](#discarded-solutions)
