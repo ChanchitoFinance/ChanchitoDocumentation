@@ -46,4 +46,6 @@ Welcome to the Chanchito project wiki. This project focuses on building a Unifie
 
 ## [3. Spikes](docs/spikes/)
 
+- ### [3.1. Payment Gateways](docs/spikes/payment-gateways.md)
+
 ## [4. PoCs](docs/pocs/)
