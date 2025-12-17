@@ -9,7 +9,8 @@
    - [PayU Latam](#3-payu-latam)
 3. [Bolivian Payment Solutions](#bolivian-payment-solutions)
    - [Mercado Pago](#1-mercado-pago)
-   - [Virtual Cards (AirTM, Takenos, etc.)](#2-virtual-cards-airtm-takenos-etc)
+   - [Libélula](#2-libélula)
+   - [Virtual Cards (AirTM, Takenos, etc.)](#3-virtual-cards-airtm-takenos-etc)
 4. [Comparison Table](#comparison-table)
 5. [Integration Complexity](#integration-complexity)
 6. [Discarded Solutions](#discarded-solutions)
@@ -19,7 +20,7 @@
 
 This document evaluates payment gateway options for Bolivian enterprises seeking to accept international payments. Our analysis focuses on solutions that minimize bureaucracy, require simple setup with basic configuration, and support either direct Bolivian bank accounts or virtual cards like AirTM and Takenos.
 
-**Key Finding**: Bolivia is not directly supported by major international gateways like Stripe. However, viable paths exist through US company formation or by using regional alternatives like Mercado Pago and PayU Latam. Virtual card solutions from AirTM and Takenos provide practical workarounds for international payments.
+**Key Finding**: Bolivia is not directly supported by major international gateways like Stripe. However, viable paths exist through US company formation or by using regional alternatives like Mercado Pago, Libélula, and PayU Latam. Virtual card solutions from AirTM and Takenos provide practical workarounds for international payments.
 
 ## International Payment Gateways
 
@@ -803,7 +804,281 @@ REACT_APP_MP_PUBLIC_KEY=APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 MP_ACCESS_TOKEN=APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-### 2. Virtual Cards (AirTM, Takenos, etc.)
+### 2. Libélula
+
+<div align="center">
+  <img src="https://wordpress-33973-0.cloudclusters.net/wp-content/uploads/2020/12/libelula_logo.png" width="400"/>
+</div>
+
+**Overview**: Libélula is the first multichannel payment gateway and online invoicing solution native to Bolivia. Operated by Todotix SRL since 2010, it is specifically designed for the Bolivian market with deep integration into local banking infrastructure and compliance with ASFI regulations and SIN tax authority requirements.
+
+**Requirements**:
+
+- Registered Bolivian business entity
+- Business legal representative identification
+- Tax identification (NIT)
+- Bolivian bank account for settlements
+- Legal representative power of attorney
+- Registration with ATC (Asociación de Tarjetas de Crédito)
+
+**Setup Process**: We contact Libélula for service information via their website or WhatsApp (591-70621222), complete registration form and submit required documentation, receive API credentials and integration documentation, integrate using RESTful API or install plugins for supported CMS platforms, test in sandbox environment, and go live once documentation is approved (typically within 24 hours of approval).
+
+**Commission Structure**:
+
+- Base commission: 2.5% per transaction
+- No affiliation fees
+- No fixed monthly costs
+- Pay only when receiving payments (no transactions means no charges)
+- Same 2.5% rate regardless of payment channel used
+
+**Advantages**:
+
+- First and most established Bolivian multichannel payment gateway (since 2010)
+- Seven payment channels integrated: credit/debit cards, QR Simple, Tigo Money, BCP button, BNB button, agent BCP, e-BISA
+- ASFI regulated and compliant with all security protocols
+- SIN-certified electronic and computerized invoicing integrated (ready for new invoicing system)
+- RESTful API for custom integrations
+- Ready-made plugins for WooCommerce, Magento 1 and 2, Prestashop, OpenCart
+- Payment link generator (pagos.libelula.bo) for quick integration without coding
+- Supports both BOB and USD currencies
+- Direct settlement to Bolivian bank accounts
+- QR Simple integration with all major Bolivian banks (BNB, Mercantil Santa Cruz, BISA, Union, Sol, Ganadero, Economico, BCP, Banco de la Nación Argentina, Fortaleza, FIE)
+- Lula Pagos mobile wallet application for transfers and payments
+- Electronic invoicing automatically sent to customers with real-time reporting and sales book generation 24/7
+- Over 450 clients and 360K annual transactions
+- Market leader in transaction volume in Bolivia
+- Strong local customer support and technical assistance in Spanish
+- Located in La Paz with physical office in Calacoto
+
+**Disadvantages**:
+
+- Bolivia-only solution (not suitable for international expansion outside Bolivia)
+- Limited to Bolivian currencies (BOB and USD)
+- Requires local business registration and Bolivian entity
+- Can only settle to Bolivian bank accounts
+- Documentation primarily in Spanish
+- Smaller developer community compared to international solutions like Stripe
+- Integration documentation less extensive than global payment gateways
+- Requires ATC registration for full functionality
+
+**Integration Difficulty**: Medium. RESTful API requires custom development, but ready-made plugins available for popular CMS platforms (WooCommerce, Magento, Prestashop, OpenCart) significantly simplify integration. Payment link generator offers zero-code option.
+
+**Bolivia Compatibility**: Excellent. Purpose-built for Bolivia with full regulatory compliance (ASFI and SIN certified).
+
+**Code Example**:
+
+```javascript
+// React Libélula Integration
+import { useState } from "react";
+
+function LibelulaCheckout() {
+  const [formData, setFormData] = useState({
+    amount: "",
+    description: "",
+    customerEmail: "",
+    customerNit: "",
+  });
+
+  const generatePaymentLink = async () => {
+    try {
+      const response = await fetch("/api/libelula-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: parseFloat(formData.amount),
+          description: formData.description,
+          currency: "BOB",
+          customerEmail: formData.customerEmail,
+          customerNit: formData.customerNit,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Redirect to Libélula payment page
+        window.location.href = data.paymentUrl;
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+    }
+  };
+
+  return (
+    <div className="libelula-checkout">
+      <h2>Pago con Libélula</h2>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          generatePaymentLink();
+        }}
+      >
+        <input
+          type="number"
+          placeholder="Monto (Bs)"
+          value={formData.amount}
+          onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Descripción"
+          value={formData.description}
+          onChange={(e) =>
+            setFormData({ ...formData, description: e.target.value })
+          }
+          required
+        />
+        <input
+          type="email"
+          placeholder="Email del cliente"
+          value={formData.customerEmail}
+          onChange={(e) =>
+            setFormData({ ...formData, customerEmail: e.target.value })
+          }
+          required
+        />
+        <input
+          type="text"
+          placeholder="NIT (opcional para factura)"
+          value={formData.customerNit}
+          onChange={(e) =>
+            setFormData({ ...formData, customerNit: e.target.value })
+          }
+        />
+        <button type="submit">Procesar Pago</button>
+      </form>
+      <div className="payment-methods">
+        <p>Métodos de pago disponibles:</p>
+        <ul>
+          <li>Tarjetas de crédito/débito (Visa, Mastercard, Amex, Diners)</li>
+          <li>QR Simple (todos los bancos bolivianos)</li>
+          <li>Tigo Money</li>
+          <li>Botón de pago BCP</li>
+          <li>Botón de pago BNB</li>
+          <li>Pago en Agente BCP</li>
+          <li>e-BISA</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export default LibelulaCheckout;
+```
+
+**Backend (Node.js) - RESTful API Integration**:
+
+```javascript
+const axios = require("axios");
+
+app.post("/api/libelula-payment", async (req, res) => {
+  const { amount, description, currency, customerEmail, customerNit } =
+    req.body;
+
+  const apiKey = process.env.LIBELULA_API_KEY;
+  const merchantId = process.env.LIBELULA_MERCHANT_ID;
+  const orderReference = "ORDER-" + Date.now();
+
+  // Generate payment request
+  // Note: This is a conceptual example. Actual Libélula API endpoints
+  // and request format should be obtained from their official documentation
+  const paymentData = {
+    merchantId: merchantId,
+    orderReference: orderReference,
+    amount: amount,
+    currency: currency || "BOB",
+    description: description,
+    customerEmail: customerEmail,
+    customerNit: customerNit || "",
+    successUrl: "https://ourwebsite.com/success",
+    failureUrl: "https://ourwebsite.com/failure",
+    callbackUrl: "https://ourwebsite.com/webhook/libelula",
+    withInvoice: customerNit ? true : false,
+  };
+
+  try {
+    const response = await axios.post(
+      "https://api.libelula.bo/v1/payment/create",
+      paymentData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    res.json({
+      success: true,
+      paymentUrl: response.data.paymentUrl,
+      sessionId: response.data.sessionId,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+// Webhook handler for payment notifications
+app.post("/webhook/libelula", async (req, res) => {
+  const { sessionId, status, amount, orderReference } = req.body;
+
+  console.log("Payment notification:", {
+    sessionId,
+    status,
+    amount,
+    orderReference,
+  });
+
+  // Process payment status
+  // status values: "completed", "pending", "failed", "cancelled"
+
+  if (status === "completed") {
+    // Update order status, send confirmation email, generate invoice
+    console.log(`Payment completed for order ${orderReference}`);
+  }
+
+  res.sendStatus(200);
+});
+```
+
+**WooCommerce Plugin Integration**:
+
+For businesses using WordPress with WooCommerce, Libélula provides a ready-made plugin:
+
+1. Download plugin from Libélula documentation portal
+2. Install in WordPress: Plugins > Add New > Upload Plugin
+3. Activate the plugin
+4. Go to WooCommerce > Settings > Payments > Libélula
+5. Enter API credentials from Libélula merchant panel (pagos.libelula.bo/admin)
+6. Configure payment channels (select which to enable: cards, QR, Tigo Money, etc.)
+7. Enable invoice generation if desired
+8. Test in sandbox mode, then enable live payments
+
+**Payment Link Generator**:
+
+For businesses without technical resources, Libélula offers a payment link generator:
+
+1. Log into pagos.libelula.bo/admin
+2. Navigate to "Links de Cobro"
+3. Create new payment link with amount and description
+4. Copy generated link
+5. Share link via email, WhatsApp, social media, or embed on website
+6. Customer clicks link and completes payment
+7. Automatic invoice generation and email delivery
+
+**Environment Variables**:
+
+```env
+LIBELULA_API_KEY=your_api_key
+LIBELULA_MERCHANT_ID=your_merchant_id
+LIBELULA_SANDBOX_MODE=false
+```
+
+### 3. Virtual Cards (AirTM, Takenos, etc.)
 
 <div align="center">
   <img src="https://moneybase.com/wp-content/uploads/2022/02/virtual-cards.png" width="400"/>
@@ -1029,28 +1304,30 @@ sequenceDiagram
     VirtualCard->>AirTM: Funds arrive in USD
     AirTM->>BolivianBank: Withdraw to local account
     BolivianBank-->>Business: Funds in bolivianos
-
 ```
 
 </div>
 
 ## Comparison Table
 
-| Feature                        | Stripe (US LLC)  | 2Checkout           | PayU Latam             | Mercado Pago           | AirTM/Takenos + Stripe/2Checkout           |
-| ------------------------------ | ---------------- | ------------------- | ---------------------- | ---------------------- | ------------------------------------------ |
-| **Bolivia Support**            | No               | Yes                 | Yes                    | Limited                | Yes                                        |
-| **Setup Complexity**           | Very High        | Medium              | Medium-High            | Medium                 | Medium                                     |
-| **Transaction Fees**           | 2.9% + $0.30     | 3.5% + $0.35        | 3.49-4.99%             | 3.99% + fee            | 3-5% total                                 |
-| **Technical Integration**      | Easy             | Medium              | Medium                 | Medium                 | Depends on gateway used (Stripe/2Checkout) |
-| **Documentation Quality**      | Excellent        | Good                | Fair                   | Good                   | N/A (uses others)                          |
-| **Time to First Payment**      | 4-8 weeks        | 1-2 weeks           | 2-4 weeks              | 1-2 weeks              | 1-3 days                                   |
-| **Requires Company Formation** | Yes (US)         | No                  | No                     | No                     | No                                         |
-| **Minimum Requirements**       | US LLC + Bank    | Business docs       | Business docs          | Account + verification | ID + $5 USD                                |
-| **Recurring Payments**         | Excellent        | Good                | Good                   | Good                   | Manual                                     |
-| **Developer Experience**       | Excellent        | Good                | Fair                   | Good                   | N/A                                        |
-| **Local Currency Support**     | Limited          | Yes (BOB)           | Yes (BOB)              | Yes (BOB)              | USD only                                   |
-| **Monthly Limits**             | None             | None                | None                   | Varies                 | $1000-$2400                                |
-| **Best For**                   | Large operations | International sales | Regional Latin America | Marketplace/C2C        | Quick international access                 |
+| Feature                        | Stripe (US LLC)  | 2Checkout           | PayU Latam             | Mercado Pago           | Libélula                   | AirTM/Takenos + Gateway    |
+| ------------------------------ | ---------------- | ------------------- | ---------------------- | ---------------------- | -------------------------- | -------------------------- |
+| **Bolivia Support**            | No               | Yes                 | Yes                    | Limited                | Yes (Native)               | Yes                        |
+| **Setup Complexity**           | Very High        | Medium              | Medium-High            | Medium                 | Low-Medium                 | Medium                     |
+| **Transaction Fees**           | 2.9% + $0.30     | 3.5% + $0.35        | 3.49-4.99%             | 3.99% + fee            | 2.5%                       | 3-5% total                 |
+| **Technical Integration**      | Easy             | Medium              | Medium                 | Medium                 | Medium (Easy with plugins) | Depends on gateway used    |
+| **Documentation Quality**      | Excellent        | Good                | Fair                   | Good                   | Fair (Spanish)             | N/A (uses others)          |
+| **Time to First Payment**      | 4-8 weeks        | 1-2 weeks           | 2-4 weeks              | 1-2 weeks              | 1-2 weeks                  | 1-3 days                   |
+| **Requires Company Formation** | Yes (US)         | No                  | No                     | No                     | No                         | No                         |
+| **Minimum Requirements**       | US LLC + Bank    | Business docs       | Business docs          | Account + verification | Bolivian business + NIT    | ID + $5 USD                |
+| **Recurring Payments**         | Excellent        | Good                | Good                   | Good                   | Good                       | Manual                     |
+| **Developer Experience**       | Excellent        | Good                | Fair                   | Good                   | Fair                       | N/A                        |
+| **Local Currency Support**     | Limited          | Yes (BOB)           | Yes (BOB)              | Yes (BOB)              | Yes (BOB, USD)             | USD only                   |
+| **Monthly Limits**             | None             | None                | None                   | Varies                 | None                       | $1000-$2400                |
+| **Local Payment Methods**      | No               | Limited             | Yes                    | Yes                    | Yes (QR, Tigo Money, etc.) | No                         |
+| **Invoicing Integration**      | No               | No                  | No                     | No                     | Yes (SIN certified)        | No                         |
+| **ASFI Regulated**             | No               | No                  | No                     | No                     | Yes                        | No                         |
+| **Best For**                   | Large operations | International sales | Regional Latin America | Marketplace/C2C        | Bolivian market            | Quick international access |
 
 ---
 
@@ -1068,6 +1345,8 @@ The following represents the relative complexity of implementing each solution:
 
 **Mercado Pago**: Similar complexity to PayU Latam but with better documentation. SDK available for common languages. Preference-based checkout simplifies some aspects. Complexity: 5/10.
 
+**Libélula**: RESTful API requires custom development with moderate complexity. Ready-made plugins for WooCommerce, Magento, Prestashop, and OpenCart significantly reduce implementation time. Payment link generator offers zero-code option. Documentation in Spanish. Complexity: 5/10 (3/10 with plugins, 1/10 with payment links).
+
 **AirTM/Takenos**: Not really an integration since we're using standard card processing. Complexity depends entirely on chosen gateway. The cards themselves are simple to obtain and use. Complexity: 4/10 (for obtaining cards) + gateway complexity.
 
 ## Discarded Solutions
@@ -1082,9 +1361,9 @@ PayPal does not operate in Bolivia. As of 2024, Bolivia remains on PayPal's rest
 
 ### Wolipay
 
-Wolipay contact support completely dissapeared from social media, and their website is broken. This payment gateway has been one of the most used bolivian payment gateways with native support for bolivian banks and QR payment options. However, it's disappearance is suspicious and demonstrates possible legal inconsistencies in their company.
+Wolipay contact support completely disappeared from social media, and their website is broken. This payment gateway has been one of the most used bolivian payment gateways with native support for bolivian banks and QR payment options. However, its disappearance is suspicious and demonstrates possible legal inconsistencies in their company.
 
-**Reason for Exclusion**: Company dissappeared from social media and website broken. No way to contact the support team.
+**Reason for Exclusion**: Company disappeared from social media and website broken. No way to contact the support team.
 
 ### Square
 
@@ -1126,6 +1405,23 @@ While cryptocurrency payments theoretically bypass traditional banking restricti
 
 ## Recommendations
 
+### For Bolivian-Focused Businesses (Best Overall for Local Market)
+
+**Recommended Solution**: Libélula
+
+For businesses primarily serving the Bolivian market, Libélula is the optimal choice. As the first and most established multichannel payment gateway in Bolivia with over 450 clients and 360K annual transactions, it offers the lowest fees (2.5%), full ASFI compliance, and native integration with Bolivian payment methods including QR Simple with all major banks, Tigo Money, and e-BISA. The integrated SIN-certified invoicing is a major advantage for tax compliance.
+
+**Implementation Path**:
+
+1. Contact Libélula via libelula.bo or WhatsApp (591-70621222)
+2. Complete registration with Bolivian business documents and NIT
+3. Submit legal representative documentation
+4. Receive API credentials or install CMS plugin (WooCommerce, Magento, etc.)
+5. Test in sandbox environment
+6. Go live within 24 hours after documentation approval
+
+**Total Setup Time**: 1-2 weeks. **Total Cost to Start**: No setup fees, 2.5% per transaction only. **Best For**: Bolivian market focus, need for local payment methods, integrated invoicing requirement.
+
 ### For Quick Start with Minimal Bureaucracy
 
 **Recommended Solution**: AirTM or Takenos Virtual Cards + Stripe or 2Checkout
@@ -1143,11 +1439,11 @@ This combination provides the fastest path to accepting international payments f
 
 **Total Setup Time**: 1 week. **Total Cost to Start**: $5-10 USD. **Monthly Fees**: Transaction-based only.
 
-### For Direct Bolivia Integration
+### For Direct Bolivia Integration (International Payments)
 
 **Recommended Solution**: 2Checkout (Verifone)
 
-Among international gateways, 2Checkout offers the most straightforward path for Bolivian businesses without requiring US entity formation. While the fees are higher than Stripe, the direct Bolivia support and ability to use local business registration make it the pragmatic choice for businesses that want a proper merchant account.
+Among international gateways, 2Checkout offers the most straightforward path for Bolivian businesses without requiring US entity formation. While the fees are higher than Stripe, the direct Bolivia support and ability to use local business registration make it the pragmatic choice for businesses that want a proper merchant account for international payments.
 
 **Implementation Path**:
 
@@ -1175,6 +1471,17 @@ If our business operates across multiple Latin American countries or we want to 
 5. Go live with multi-country support
 
 **Total Setup Time**: 3-4 weeks. **Best For**: Businesses with regional ambitions beyond Bolivia.
+
+### Hybrid Approach for Maximum Flexibility
+
+**Recommended Solution**: Libélula (for Bolivian customers) + 2Checkout or AirTM/Takenos + Stripe (for international customers)
+
+For businesses serving both Bolivian and international markets, implementing multiple payment solutions provides optimal coverage:
+
+- **Libélula**: Lowest fees (2.5%), local payment methods, invoicing for Bolivian customers
+- **2Checkout or Stripe with virtual cards**: International card payments from outside Bolivia
+
+This approach maximizes conversion by offering customers their preferred payment methods while optimizing fees based on transaction origin.
 
 ## Final Considerations
 
@@ -1207,3 +1514,34 @@ All mentioned payment gateways offer sandbox/test environments. We should always
 - Test edge cases (expired cards, insufficient funds, etc.)
 
 We use test card numbers provided by each gateway. We never use real card details in development environments.
+
+### Regulatory Compliance
+
+If we act as a Bolivian business using Libélula we need to:
+
+- Ensure ASFI compliance for all payment processing
+- Use SIN-certified invoicing systems
+- Maintain proper records of all transactions
+- Report foreign currency transactions as required
+- Consider ATC registration requirements
+
+### Customer Experience
+
+When choosing a payment gateway, consider the customer experience:
+
+- Payment page loading speed
+- Mobile responsiveness
+- Available payment methods
+- Checkout flow simplicity
+- Trust indicators and security badges
+- Language support (Spanish for Bolivian customers)
+
+### Support and Documentation
+
+Consider the level of support you'll need:
+
+- **Libélula**: Local support in Spanish, physical office in La Paz
+- **International gateways**: English documentation, email/ticket support
+- **Community**: Stack Overflow, developer forums for popular platforms
+
+For our country, Libélula's local support and ready-made plugins may be more valuable than the advanced features of international solutions
