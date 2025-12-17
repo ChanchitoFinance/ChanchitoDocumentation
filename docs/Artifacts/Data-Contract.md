@@ -1,5 +1,3 @@
-Copy the below code block and paste it in the [Swagger Editor](https://editor.swagger.io/) to see the Data Contract in a rich view.
-
 ```yaml
 openapi: 3.0.3
 info:
@@ -19,23 +17,76 @@ security:
   - BearerAuth: []
 
 tags:
+  - name: Auth
   - name: Users
   - name: Categories
   - name: Products
   - name: Expenses
 
 paths:
-  /me:
-    get:
-      tags: [Users]
-      summary: Get current user profile
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login with Google service provider
+      description: >
+        Accepts a Google ID token in the `Authorization` header (Bearer token).
+        The backend verifies the token with Google and returns the app's own tokens.
+        NOTE: This endpoint returns tokens only; retrieve the current user's profile at `GET /users/me`.
+      security: []   # public – client sends Google ID token in Authorization header
       responses:
         "200":
-          description: Current user
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/me:
+    get:
+      tags: [Users]
+      summary: Get current user's profile
+      responses:
+        "200":
+          description: Current user profile
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    patch:
+      tags: [Users]
+      summary: Update current user's profile (email only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: Updated user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "422": { $ref: "#/components/responses/UnprocessableEntity" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    delete:
+      tags: [Users]
+      summary: Delete current user's account
+      description: >
+        Irreversibly deletes the user's account and associated personal data according to
+        retention policies. Requires re-authentication if applicable.
+      responses:
+        "204":
+          description: Account deleted (no content)
         "401": { $ref: "#/components/responses/Unauthorized" }
 
   /categories:
@@ -51,7 +102,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/NestedCategoryList"
+                type: array
+                items: { $ref: "#/components/schemas/NestedCategory" }
     post:
       tags: [Categories]
       summary: Create category (optionally as a child of another)
@@ -119,6 +171,10 @@ paths:
           in: query
           description: Case-insensitive name search
           schema: { type: string }
+        - name: isActive
+          in: query
+          description: Filter by active/inactive products
+          schema: { type: boolean }
         - $ref: "#/components/parameters/Page"
         - $ref: "#/components/parameters/PageSize"
       responses:
@@ -130,7 +186,7 @@ paths:
                 $ref: "#/components/schemas/PagedProduct"
     post:
       tags: [Products]
-      summary: Create product
+      summary: Create product (optionally with initial prices)
       requestBody:
         required: true
         content:
@@ -167,7 +223,13 @@ paths:
         "404": { $ref: "#/components/responses/NotFound" }
     patch:
       tags: [Products]
-      summary: Update product
+      summary: Update product (fields and embedded prices)
+      description: >
+        Supports partial updates to product fields and price records.
+        To upsert prices, send `prices`:
+        - If an item has `id`, it is updated in-place.
+        - If an item has no `id`, a new price record is created.
+        To deactivate existing price records, send `removePriceIds` (soft-remove: sets `isActive=false`).
       parameters:
         - $ref: "#/components/parameters/Id"
       requestBody:
@@ -394,21 +456,28 @@ components:
 
     AuthResponse:
       type: object
+      description: Tokens for authenticated access. Retrieve the user via `GET /users/me`.
       properties:
         accessToken: { type: string, description: "JWT for API access" }
         refreshToken: { type: string, description: "JWT/opaque token to refresh access" }
-        user:
-          $ref: "#/components/schemas/User"
-      required: [accessToken, refreshToken, user]
+      required: [accessToken, refreshToken]
 
     User:
       type: object
+      description: Minimal user representation.
       properties:
         id: { type: string, format: uuid }
-        fullName: { type: string }
         email: { type: string, format: email }
-        createdAt: { type: string, format: date-time }
-      required: [id, fullName, email, createdAt]
+      required: [id, email]
+
+    UpdateUserRequest:
+      type: object
+      description: Only the email can be updated.
+      properties:
+        email:
+          type: string
+          format: email
+      required: [email]
 
     # --- Categories (nested for reads; parentId only in write models) ---
     Category:
@@ -440,26 +509,16 @@ components:
           items: { $ref: "#/components/schemas/NestedCategory" }
       required: [id, name, ownerType, createdAt, children]
 
-    NestedCategoryList:
-      type: object
-      properties:
-        data:
-          type: array
-          items: { $ref: "#/components/schemas/NestedCategory" }
-      required: [data]
-
     CreateCategoryRequest:
       type: object
       properties:
         name: { type: string }
-        ownerType: { type: string, enum: [system, user], default: user }
-        ownerId: { type: string, format: uuid, nullable: true }
         parentId:
           type: string
           format: uuid
           nullable: true
           description: Optional when creating a subcategory
-      required: [name, ownerType]
+      required: [name]
 
     UpdateCategoryRequest:
       type: object
@@ -471,7 +530,7 @@ components:
           nullable: true
           description: Move under a different parent (null to promote to root)
 
-    # --- Products (unit removed from all schemas) ---
+    # --- Products ---
     Product:
       type: object
       properties:
@@ -481,8 +540,42 @@ components:
         ownerType: { type: string, enum: [system, user] }
         ownerId: { type: string, format: uuid, nullable: true }
         notes: { type: string, nullable: true }
+        isActive:
+          type: boolean
+          description: Whether the product is active and shown in listings
+          default: true
         createdAt: { type: string, format: date-time }
-      required: [id, name, categoryId, ownerType, createdAt]
+      required: [id, name, categoryId, ownerType, isActive, createdAt]
+
+    ProductPriceWrite:
+      type: object
+      description: >
+        Upsert model for product prices. If `id` is provided, the record is updated; otherwise a new record is created.
+        To soft-remove, use UpdateProductRequest.removePriceIds.
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Optional; when present, updates the existing price
+        price: { $ref: "#/components/schemas/Money4" }
+        currency: { $ref: "#/components/schemas/CurrencyCode" }
+        location:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+          default: true
+          description: If false during upsert, server sets price record inactive
+        collectedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: If omitted, server uses current time
+      required: [price, currency]
 
     ProductWithPrices:
       allOf:
@@ -495,10 +588,12 @@ components:
               items:
                 type: object
                 properties:
+                  id: { type: string, format: uuid }
                   price: { $ref: "#/components/schemas/Money4" }
                   currency: { $ref: "#/components/schemas/CurrencyCode" }
-                  location: { type: string }
-                  source: { type: string }
+                  location: { type: string, nullable: true }
+                  source: { type: string, nullable: true }
+                  isActive: { type: boolean }
                   collectedAt: { type: string, format: date-time }
                 required: [price, currency, collectedAt]
 
@@ -510,6 +605,14 @@ components:
         ownerType: { type: string, enum: [system, user], default: user }
         ownerId: { type: string, format: uuid, nullable: true }
         notes: { type: string, nullable: true }
+        isActive:
+          type: boolean
+          default: true
+          description: Set initial active state (defaults to true)
+        prices:
+          type: array
+          description: Optional initial prices to attach to the product
+          items: { $ref: "#/components/schemas/ProductPriceWrite" }
       required: [name, categoryId, ownerType]
 
     UpdateProductRequest:
@@ -518,17 +621,28 @@ components:
         name: { type: string }
         categoryId: { type: string, format: uuid }
         notes: { type: string, nullable: true }
+        isActive:
+          type: boolean
+          description: Activate/deactivate the product
+        prices:
+          type: array
+          description: Upsert prices (create new or update existing by `id`)
+          items: { $ref: "#/components/schemas/ProductPriceWrite" }
+        removePriceIds:
+          type: array
+          description: Soft-remove existing price records (sets isActive=false)
+          items: { type: string, format: uuid }
 
     PagedProduct:
       type: object
       properties:
-        data:
+        items:
           type: array
           items: { $ref: "#/components/schemas/Product" }
         meta: { $ref: "#/components/schemas/PagedMeta" }
-      required: [data, meta]
+      required: [items, meta]
 
-    # --- Expenses (totals removed from all schemas) ---
+    # --- Expenses ---
     Expense:
       type: object
       properties:
@@ -585,9 +699,10 @@ components:
     PagedExpense:
       type: object
       properties:
-        data:
+        items:
           type: array
           items: { $ref: "#/components/schemas/Expense" }
         meta: { $ref: "#/components/schemas/PagedMeta" }
-      required: [data, meta]
+      required: [items, meta]
+
 ```
