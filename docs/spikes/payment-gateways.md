@@ -10,8 +10,8 @@
 3. [Bolivian Payment Solutions](#bolivian-payment-solutions)
    - [Mercado Pago](#1-mercado-pago)
    - [Virtual Cards (AirTM, Takenos, etc.)](#2-virtual-cards-airtm-takenos-etc)
-4. [Decision Matrix](#decision-matrix)
-5. [Integration Complexity Comparison](#integration-complexity-comparison)
+4. [Comparison Table](#comparison-table)
+5. [Integration Complexity](#integration-complexity)
 6. [Discarded Solutions](#discarded-solutions)
 7. [Recommendations](#recommendations)
 
@@ -1034,7 +1034,7 @@ sequenceDiagram
 
 </div>
 
-## Decision Matrix
+## Comparison Table
 
 | Feature                        | Stripe (US LLC)  | 2Checkout           | PayU Latam             | Mercado Pago           | AirTM/Takenos + Stripe/2Checkout           |
 | ------------------------------ | ---------------- | ------------------- | ---------------------- | ---------------------- | ------------------------------------------ |
@@ -1054,7 +1054,7 @@ sequenceDiagram
 
 ---
 
-## Integration Complexity Comparison
+## Integration Complexity
 
 ### Code Complexity Rating
 
