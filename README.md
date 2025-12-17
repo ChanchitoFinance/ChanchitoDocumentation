@@ -10,32 +10,40 @@ Welcome to the Chanchito project wiki. This project focuses on building a Unifie
 
 # Wiki Navigation
 
-## [1. Artifacts](docs/Artifacts/)
+## [1. Projects](docs/projects/)
 
-- ### [1.1. C4 Diagrams](docs/Artifacts/C4-Diagrams.md)
+- ### [1.1. Chanchito App](docs/projects/chanchito-app/)
 
-- ### [1.2. Data Contract](docs/Artifacts/Data-Contract.md)
+  - #### [1.1.1. Artifacts](docs/projects/chanchito-app/Artifacts/)
 
-- ### [1.3. Database Schema](docs/Artifacts/Database-Schema.md)
+    - ##### [1.1.1.1. C4 Diagrams](docs/projects/chanchito-app/Artifacts/C4-Diagrams.md)
 
-## [2. MVO Platform](docs/MVO/)
+    - ##### [1.1.1.2. Data Contract](docs/projects/chanchito-app/Artifacts/Data-Contract.md)
 
-- ### [2.1. MVO Platform Specification](docs/MVO/MVO-Platform.md)
+    - ##### [1.1.1.3. Database Schema](docs/projects/chanchito-app/Artifacts/Database-Schema.md)
 
-- ### [2.2. MVO Platform Feature Implementation Feasibility](docs/MVO/MVO-Platform-Feature-Implementation-Feasibility-Specification.md)
+  - #### [1.1.2. General](docs/projects/chanchito-app/General/)
 
-## [3. General](docs/General/)
+    - ##### [1.1.2.1. 4Ps](docs/projects/chanchito-app/General/4Ps.md)
 
-- ### [3.1. 4Ps](docs/General/4Ps.md)
+    - ##### [1.1.2.2. Next Tasks](docs/projects/chanchito-app/General/Next-Tasks.md)
 
-- ### [3.3. Next Tasks](docs/General/Next-Tasks.md)
+    - ##### [1.1.2.3. Products Categories](docs/projects/chanchito-app/General/Products-Categories.md)
 
-- ### [3.4. Products Categories](docs/General/Products-Categories.md)
+- ### [1.2. MVO](docs/projects/mvo/)
 
-## [4. Meeting Logs](docs/Meeting-Logs/)
+  - #### [1.2.1. Artifacts](docs/projects/mvo/artifacts/)
 
-- ### [4.1. Discussion Meeting Logs](docs/Meeting-Logs/Discussion-Meeting-Logs.md)
+    - ##### [1.2.1.1. Feature Implementation Feasibility Specification](docs/projects/mvo/artifacts/Feature-Implementation-Feasibility-Specification.md)
 
-## [5. Spikes](docs/Spikes/)
+  - #### [1.2.2. General](docs/projects/mvo/general/)
 
-## [6. PoCs](docs/PoCs/)
+    - ##### [1.2.2.1. Project Specification Document](docs/projects/mvo/general/Project-Specification-Document.md)
+
+## [2. Meeting Logs](docs/meeting-logs/)
+
+- ### [2.1. Discussion Meeting Logs](docs/meeting-logs/Discussion-Meeting-Logs.md)
+
+## [3. Spikes](docs/spikes/)
+
+## [4. PoCs](docs/pocs/)
