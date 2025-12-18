@@ -1,0 +1,598 @@
+
+Enum membership_role {
+  admin
+  moderator
+  member
+  validator
+}
+
+Enum membership_status {
+  active
+  invited
+  blocked
+}
+
+Enum space_visibility {
+  public
+  invite_only
+  private
+}
+
+Enum idea_status_flag {
+  new
+  active_discussion
+  trending
+  validated
+  controversial
+}
+
+Enum pivot_state {
+  stable
+  pivot_suggested
+  kill_suggested
+}
+
+Enum idea_vote_type {
+  dislike
+  use
+  pay
+}
+
+Enum comment_reaction_type {
+  upvote
+  downvote
+  helpful
+}
+
+Enum media_type {
+  image
+  video
+  link
+}
+
+Enum post_type {
+  team_post
+  blog_post
+}
+
+Enum post_status {
+  draft
+  published
+  archived
+}
+
+/* -------------------------
+   Shared / Media
+--------------------------*/
+
+Table media_assets {
+  id uuid [pk]
+  type media_type
+  url text [not null]
+  metadata jsonb
+  created_at timestamptz
+
+  Indexes {
+    (type)
+    (created_at)
+  }
+}
+
+/* -------------------------
+   Identity / Tenancy
+--------------------------*/
+
+Table teams {
+  id uuid [pk]
+  name varchar [not null, unique]
+  description text
+  avatar_media_id uuid
+  created_at timestamptz
+  updated_at timestamptz
+
+  Indexes {
+    (created_at)
+  }
+}
+
+Table users {
+  id uuid [pk]
+  username varchar [not null, unique]
+  profile_media_id uuid
+  reputation_score int [default: 0]
+  streak_count int [default: 0]
+  created_at timestamptz
+  updated_at timestamptz
+
+  Indexes {
+    (created_at)
+    (reputation_score)
+  }
+}
+
+Table team_memberships {
+  id uuid [pk]
+  team_id uuid [not null]
+  user_id uuid [not null]
+  role membership_role [not null]
+  status membership_status [not null, default: 'active']
+  created_at timestamptz
+
+  Indexes {
+    (team_id, user_id) [unique]
+    (team_id)
+    (user_id)
+  }
+}
+
+Table enterprise_spaces {
+  id uuid [pk]
+  team_id uuid [not null]
+  name varchar [not null]
+  visibility space_visibility [not null, default: 'private']
+  settings jsonb
+  created_at timestamptz
+  updated_at timestamptz
+
+  Indexes {
+    (team_id)
+    (team_id, name) [unique]
+    (created_at)
+  }
+}
+
+Table space_memberships {
+  id uuid [pk]
+  space_id uuid [not null]
+  user_id uuid [not null]
+  role membership_role [not null, default: 'member']
+  status membership_status [not null, default: 'active']
+  created_at timestamptz
+
+  Indexes {
+    (space_id, user_id) [unique]
+    (space_id)
+    (user_id)
+  }
+}
+
+/* -------------------------
+   Taxonomy (Relational)
+--------------------------*/
+
+Table topics {
+  id uuid [pk]
+  name varchar [not null, unique]
+  icon_media_id uuid
+  description text
+}
+
+Table tags {
+  id uuid [pk]
+  name varchar [not null, unique]
+}
+
+Table user_topics {
+  user_id uuid [not null, pk]
+  topic_id uuid [not null, pk]
+  interest_level int [default: 1]
+  created_at timestamptz
+
+  Indexes {
+    (topic_id)
+  }
+}
+
+Table badges {
+  id uuid [pk]
+  code varchar [not null, unique]
+  name varchar [not null]
+  description text
+  icon_media_id uuid
+}
+
+Table user_badges {
+  user_id uuid [not null, pk]
+  badge_id uuid [not null, pk]
+  awarded_at timestamptz
+
+  Indexes {
+    (badge_id)
+  }
+}
+
+Table user_preferences {
+  user_id uuid [pk]
+  preferences jsonb
+  updated_at timestamptz
+}
+
+/* -------------------------
+   NoSQL Pointers (Relational references to variable content)
+--------------------------*/
+// Instead of storing “content” as large JSONB in Postgres, this is a stable pointer.
+// Example content_ref values:
+// - mongodb://ideas/652f...
+// - firestore:ideas/{docId}
+// - s3://content/ideas/{id}.json (if you store JSON in object storage)
+
+Table content_refs {
+  id uuid [pk]
+  provider varchar [not null] // mongodb|firestore|dynamodb|s3|etc.
+  collection varchar [not null] // ideas|posts|comments|...
+  external_id varchar [not null] // document id / key in NoSQL
+  version int [default: 1]
+  checksum varchar
+  created_at timestamptz
+
+  Indexes {
+    (provider, collection, external_id) [unique]
+    (collection)
+  }
+}
+
+/* -------------------------
+   Ideas (Relational metadata + NoSQL content)
+--------------------------*/
+
+Table ideas {
+  id uuid [pk]
+  space_id uuid [not null]
+  creator_id uuid [not null]
+
+  // stable, queryable metadata
+  title varchar [not null]              // keep if you need fast lists/search; otherwise move to NoSQL too
+  status_flag idea_status_flag [not null, default: 'new']
+  pivot_state pivot_state [not null, default: 'stable']
+
+  // variable description/media/blocks live in NoSQL
+  content_ref_id uuid [not null]        // FK -> content_refs (collection='ideas')
+
+  created_at timestamptz
+  updated_at timestamptz
+
+  Indexes {
+    (space_id, created_at)
+    (space_id, status_flag)
+    (creator_id, created_at)
+  }
+}
+
+Table idea_variants {
+  id uuid [pk]
+  idea_id uuid [not null]
+  variant_type varchar // pricing_test, feature_test, branding_test, etc.
+
+  // metadata you filter/sort on
+  title varchar [not null]
+
+  // variable experiment payload lives in NoSQL
+  content_ref_id uuid [not null] // FK -> content_refs (collection='idea_variants')
+
+  created_at timestamptz
+  updated_at timestamptz
+
+  Indexes {
+    (idea_id, created_at)
+    (variant_type)
+  }
+}
+
+Table idea_topics {
+  idea_id uuid [not null, pk]
+  topic_id uuid [not null, pk]
+
+  Indexes {
+    (topic_id)
+  }
+}
+
+Table idea_tags {
+  idea_id uuid [not null, pk]
+  tag_id uuid [not null, pk]
+
+  Indexes {
+    (tag_id)
+  }
+}
+
+/* Optional:
+   If media is also variable and stored inside NoSQL content, you can REMOVE idea_media/variant_media entirely.
+   If you want a searchable media library, keep these link tables.
+*/
+Table idea_media {
+  idea_id uuid [not null, pk]
+  media_id uuid [not null, pk]
+  sort_order int [default: 0]
+}
+
+Table variant_media {
+  variant_id uuid [not null, pk]
+  media_id uuid [not null, pk]
+  sort_order int [default: 0]
+}
+
+/* -------------------------
+   Votes / Comments (Relational)
+--------------------------*/
+
+Table idea_votes {
+  id uuid [pk]
+  voter_id uuid [not null]
+  idea_id uuid [not null]
+  variant_id uuid
+  vote_type idea_vote_type [not null]
+  created_at timestamptz
+
+  Indexes {
+    (idea_id)
+    (variant_id)
+    (voter_id, created_at)
+    (idea_id, voter_id, vote_type) [unique]
+  }
+}
+
+Table comments {
+  id uuid [pk]
+  idea_id uuid [not null]
+  user_id uuid [not null]
+  parent_comment_id uuid
+  is_anonymous boolean [not null, default: false]
+
+  // If comment structure is also variable, store it in NoSQL too:
+  content_ref_id uuid [not null] // FK -> content_refs (collection='comments')
+
+  created_at timestamptz
+  updated_at timestamptz
+  deleted_at timestamptz
+
+  Indexes {
+    (idea_id, created_at)
+    (parent_comment_id)
+    (user_id, created_at)
+  }
+}
+
+Table comment_votes {
+  id uuid [pk]
+  comment_id uuid [not null]
+  user_id uuid [not null]
+  reaction_type comment_reaction_type [not null]
+  created_at timestamptz
+
+  Indexes {
+    (comment_id)
+    (user_id, created_at)
+    (comment_id, user_id, reaction_type) [unique]
+  }
+}
+
+/* -------------------------
+   Posts (Relational metadata + NoSQL content)
+--------------------------*/
+
+Table posts {
+  id uuid [pk]
+  team_id uuid
+  space_id uuid
+  author_user_id uuid
+  post_type post_type [not null]
+  status post_status [not null, default: 'draft']
+
+  // stable metadata
+  title varchar [not null]
+
+  // variable blocks/media/embeds live in NoSQL
+  content_ref_id uuid [not null] // FK -> content_refs (collection='posts')
+
+  created_at timestamptz
+  updated_at timestamptz
+  published_at timestamptz
+
+  Indexes {
+    (team_id, created_at)
+    (space_id, created_at)
+    (status, published_at)
+  }
+}
+
+/* Optional media library links (keep only if needed) */
+Table post_media {
+  post_id uuid [not null, pk]
+  media_id uuid [not null, pk]
+  sort_order int [default: 0]
+}
+
+/* -------------------------
+   Newsletters (mostly relational; can also be NoSQL if very blocky)
+--------------------------*/
+
+Table newsletters {
+  id uuid [pk]
+  space_id uuid
+  title varchar [not null]
+  created_at timestamptz
+  updated_at timestamptz
+
+  Indexes {
+    (space_id, created_at)
+  }
+}
+
+Table newsletter_blocks {
+  id uuid [pk]
+  newsletter_id uuid [not null]
+  block_type varchar [not null]
+  content jsonb
+  sort_order int [default: 0]
+
+  Indexes {
+    (newsletter_id, sort_order)
+  }
+}
+
+Table newsletter_featured_ideas {
+  newsletter_id uuid [not null, pk]
+  idea_id uuid [not null, pk]
+  sort_order int [default: 0]
+
+  Indexes {
+    (newsletter_id, sort_order)
+    (idea_id)
+  }
+}
+
+/* -------------------------
+   Notifications
+--------------------------*/
+
+Table notifications {
+  id uuid [pk]
+  user_id uuid [not null]
+  type varchar [not null]
+  payload jsonb
+  is_read boolean [not null, default: false]
+  created_at timestamptz
+  read_at timestamptz
+
+  Indexes {
+    (user_id, is_read, created_at)
+  }
+}
+
+/* -------------------------
+   Follows (split tables for integrity)
+--------------------------*/
+
+Table follow_users {
+  follower_id uuid [not null, pk]
+  followed_user_id uuid [not null, pk]
+  created_at timestamptz
+
+  Indexes {
+    (followed_user_id)
+  }
+}
+
+Table follow_ideas {
+  follower_id uuid [not null, pk]
+  idea_id uuid [not null, pk]
+  created_at timestamptz
+
+  Indexes {
+    (idea_id)
+  }
+}
+
+Table follow_teams {
+  follower_id uuid [not null, pk]
+  team_id uuid [not null, pk]
+  created_at timestamptz
+
+  Indexes {
+    (team_id)
+  }
+}
+
+Table follow_topics {
+  follower_id uuid [not null, pk]
+  topic_id uuid [not null, pk]
+  created_at timestamptz
+
+  Indexes {
+    (topic_id)
+  }
+}
+
+/* -------------------------
+   Relationships (Refs)
+--------------------------*/
+
+// Media refs
+Ref: teams.avatar_media_id > media_assets.id
+Ref: users.profile_media_id > media_assets.id
+Ref: topics.icon_media_id > media_assets.id
+Ref: badges.icon_media_id > media_assets.id
+
+// Tenancy & memberships
+Ref: teams.id < team_memberships.team_id
+Ref: users.id < team_memberships.user_id
+
+Ref: teams.id < enterprise_spaces.team_id
+Ref: enterprise_spaces.id < space_memberships.space_id
+Ref: users.id < space_memberships.user_id
+
+// Taxonomy
+Ref: users.id < user_topics.user_id
+Ref: topics.id < user_topics.topic_id
+
+Ref: users.id < user_badges.user_id
+Ref: badges.id < user_badges.badge_id
+
+Ref: users.id - user_preferences.user_id
+
+// Content refs (pointers to NoSQL docs)
+Ref: content_refs.id < ideas.content_ref_id
+Ref: content_refs.id < idea_variants.content_ref_id
+Ref: content_refs.id < posts.content_ref_id
+Ref: content_refs.id < comments.content_ref_id
+
+// Ideas
+Ref: enterprise_spaces.id < ideas.space_id
+Ref: users.id < ideas.creator_id
+Ref: ideas.id < idea_variants.idea_id
+
+Ref: ideas.id < idea_topics.idea_id
+Ref: topics.id < idea_topics.topic_id
+
+Ref: ideas.id < idea_tags.idea_id
+Ref: tags.id < idea_tags.tag_id
+
+// Media linking (optional library)
+Ref: ideas.id < idea_media.idea_id
+Ref: media_assets.id < idea_media.media_id
+
+Ref: idea_variants.id < variant_media.variant_id
+Ref: media_assets.id < variant_media.media_id
+
+// Voting & comments
+Ref: users.id < idea_votes.voter_id
+Ref: ideas.id < idea_votes.idea_id
+Ref: idea_variants.id < idea_votes.variant_id
+
+Ref: ideas.id < comments.idea_id
+Ref: users.id < comments.user_id
+Ref: comments.id < comments.parent_comment_id
+
+Ref: comments.id < comment_votes.comment_id
+Ref: users.id < comment_votes.user_id
+
+// Posts
+Ref: teams.id < posts.team_id
+Ref: enterprise_spaces.id < posts.space_id
+Ref: users.id < posts.author_user_id
+
+Ref: posts.id < post_media.post_id
+Ref: media_assets.id < post_media.media_id
+
+// Newsletters
+Ref: enterprise_spaces.id < newsletters.space_id
+Ref: newsletters.id < newsletter_blocks.newsletter_id
+Ref: newsletters.id < newsletter_featured_ideas.newsletter_id
+Ref: ideas.id < newsletter_featured_ideas.idea_id
+
+// Notifications
+Ref: users.id < notifications.user_id
+
+// Follows
+Ref: users.id < follow_users.follower_id
+Ref: users.id < follow_users.followed_user_id
+
+Ref: users.id < follow_ideas.follower_id
+Ref: ideas.id < follow_ideas.idea_id
+
+Ref: users.id < follow_teams.follower_id
+Ref: teams.id < follow_teams.team_id
+
+Ref: users.id < follow_topics.follower_id
+Ref: topics.id < follow_topics.topic_id
