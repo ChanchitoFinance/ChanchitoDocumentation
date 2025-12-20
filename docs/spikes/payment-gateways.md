@@ -7,20 +7,22 @@
    - [Stripe (via US LLC)](#1-stripe-via-us-llc)
    - [2Checkout (Verifone)](#2-2checkout-verifone)
    - [PayU Latam](#3-payu-latam)
+   - [Mercado Pago](#4-mercado-pago)
 3. [Bolivian Payment Solutions](#bolivian-payment-solutions)
-   - [Mercado Pago](#1-mercado-pago)
-   - [Libélula](#2-libélula)
-   - [Virtual Cards (AirTM, Takenos, etc.)](#3-virtual-cards-airtm-takenos-etc)
-4. [Comparison Table](#comparison-table)
-5. [Integration Complexity](#integration-complexity)
-6. [Discarded Solutions](#discarded-solutions)
-7. [Recommendations](#recommendations)
+   - [Libélula](#1-libélula)
+4. [Virtual Cards (AirTM, Takenos, etc.)](#virtual-cards-airtm-takenos-etc)
+5. [Google Pay as Digital Wallet](#google-pay-as-digital-wallet)
+6. [Merchant of Record (MoR) Platforms](#merchant-of-record-mor-platforms)
+7. [Comparison Table](#comparison-table)
+8. [Integration Complexity](#integration-complexity)
+9. [Discarded Solutions](#discarded-solutions)
+10. [Recommendations](#recommendations)
 
 ## Summary
 
 This document evaluates payment gateway options for Bolivian enterprises seeking to accept international payments. Our analysis focuses on solutions that minimize bureaucracy, require simple setup with basic configuration, and support either direct Bolivian bank accounts or virtual cards like AirTM and Takenos.
 
-**Key Finding**: Bolivia is not directly supported by major international gateways like Stripe. However, viable paths exist through US company formation or by using regional alternatives like Mercado Pago, Libélula, and PayU Latam. Virtual card solutions from AirTM and Takenos provide practical workarounds for international payments.
+**Key Finding**: Bolivia is not directly supported by major international gateways like Stripe. However, viable paths exist through US company formation or by using regional alternatives like Libélula and PayU Latam. Virtual card solutions from AirTM and Takenos provide practical workarounds for international payments. Importantly, all manual payment gateway integrations require mandatory enterprise formation (LLC, unipersonal enterprise with NIT, etc.) - individual freelancers cannot register directly. Mercado Pago does not support Bolivia and requires an Argentine phone number for registration.
 
 ## International Payment Gateways
 
@@ -633,15 +635,13 @@ graph LR
 
 </div>
 
-## Bolivian Payment Solutions
-
-### 1. Mercado Pago
+### 4. Mercado Pago
 
 <div align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Mercado_Pago.svg/2560px-Mercado_Pago.svg.png" width="400"/>
 </div>
 
-**Overview**: Mercado Pago is one of the most popular payment platforms in Latin America, operated by Mercado Libre. While its primary markets are Argentina, Brazil, Mexico, and Chile, it has limited presence in Bolivia through regional coverage.
+**Overview**: Mercado Pago is one of the most popular payment platforms in Latin America, operated by Mercado Libre. It does not support Bolivia and requires an Argentine phone number for registration. The platform is primarily focused on Argentina, Brazil, Mexico, and Chile.
 
 **Requirements**:
 
@@ -665,7 +665,7 @@ graph LR
 
 - Well-known brand in Latin America
 - Strong mobile app presence
-- QR code payment support popular in Bolivia
+- QR code payment support popular in supported countries
 - Good documentation in Spanish and Portuguese
 - Multiple integration options (SDKs, API, Bricks)
 - Subscription and recurring payment support
@@ -673,16 +673,16 @@ graph LR
 
 **Disadvantages**:
 
-- Limited direct Bolivia support (more focused on Argentina, Brazil, Chile, Mexico)
+- No Bolivia support - requires Argentine registration
 - Commission rates can be high
 - Requires existing Mercado Libre ecosystem presence
-- Withdrawal to Bolivian banks may have limitations
+- Withdrawal limitations for unsupported countries
 - Some features restricted by country
 - Primarily oriented toward C2C and marketplace transactions
 
 **Integration Difficulty**: Medium. Good documentation but region-specific nuances.
 
-**Bolivia Compatibility**: Limited. Better for businesses operating in multiple Latin American countries.
+**Bolivia Compatibility**: No. Does not support Bolivia.
 
 **Code Example**:
 
@@ -726,7 +726,7 @@ function MercadoPagoCheckout() {
     const preferenceId = await createPreference();
 
     const mp = new window.MercadoPago(process.env.REACT_APP_MP_PUBLIC_KEY, {
-      locale: "es-BO",
+      locale: "es-AR", // Note: Bolivia not supported
     });
 
     mp.checkout({
@@ -804,7 +804,9 @@ REACT_APP_MP_PUBLIC_KEY=APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 MP_ACCESS_TOKEN=APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-### 2. Libélula
+## Bolivian Payment Solutions
+
+### 1. Libélula
 
 <div align="center">
   <img src="https://wordpress-33973-0.cloudclusters.net/wp-content/uploads/2020/12/libelula_logo.png" width="400"/>
@@ -1078,13 +1080,13 @@ LIBELULA_MERCHANT_ID=your_merchant_id
 LIBELULA_SANDBOX_MODE=false
 ```
 
-### 3. Virtual Cards (AirTM, Takenos, etc.)
+## Virtual Cards (AirTM, Takenos, etc.)
 
 <div align="center">
   <img src="https://moneybase.com/wp-content/uploads/2022/02/virtual-cards.png" width="400"/>
 </div>
 
-**Overview**: This is not a traditional payment gateway but rather a solution using US-issued virtual cards (Visa) from AirTM or Takenos that can be used with any payment processor that accepts international cards. This approach is increasingly popular in our country for receiving international payments.
+**Overview**: This is not a traditional payment gateway but rather a solution using US-issued virtual cards (Visa) from AirTM or Takenos that can be used with any payment processor that accepts international cards. This approach is increasingly popular in Bolivia for receiving international payments. However, as discovered, using these virtual cards with payment gateways still requires mandatory enterprise formation (LLC, unipersonal enterprise with NIT, etc.) - individual freelancers cannot register directly with gateways. Virtual cards provide a workaround for receiving payouts but do not eliminate the enterprise requirement for gateway integration.
 
 **Requirements**:
 
@@ -1308,18 +1310,134 @@ sequenceDiagram
 
 </div>
 
+## Google Pay as Digital Wallet
+
+<div align="center">
+  <img src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-marketing.svg" width="400"/>
+</div>
+
+**Overview**: Google Pay is a digital wallet that allows users to make payments using cards and methods stored in their Google account. It acts as a payment facilitator that simplifies the integration of payment gateways into websites by enabling users to pay with their registered payment methods (credit/debit cards, bank accounts) through a unified interface. Google Pay itself is not a payment gateway but rather a digital wallet that requires integration with a Payment Service Provider (PSP) or gateway from their approved list.
+
+**How It Works**: Google Pay streamlines the checkout process by presenting a familiar payment interface where users can select from their saved payment methods. When integrated into a website, it handles the tokenization and secure transmission of payment data to the configured PSP, reducing PCI compliance burden on merchants.
+
+**Integration Benefits**:
+
+- Unified payment experience across devices
+- Enhanced security through tokenization
+- Support for multiple payment methods in one interface
+- Reduced checkout friction for users
+- Mobile-optimized payment flow
+
+**PSP Requirements**: Google Pay requires integration with an approved Payment Service Provider from their list (available at https://developers.google.com/pay/api#participating-processors). These PSPs handle the actual payment processing, settlement, and compliance.
+
+**Enterprise Requirement**: As with other payment gateways, all approved PSPs require mandatory enterprise formation (LLC, unipersonal enterprise with NIT, etc.) for merchant accounts. Individual freelancers cannot register directly.
+
+**POC Reference**: A proof of concept has been developed demonstrating Google Pay integration. A reusable module can be found at: https://github.com/ChanchitoFinance/ChanchitoTools/tree/main/ChanchitoTools.GooglePay
+
+## Merchant of Record (MoR) Platforms
+
+**Overview**: Merchant of Record (MoR) platforms are third-party services that handle all aspects of payment processing, tax collection, and compliance on behalf of sellers. These platforms act as the legal merchant of record for transactions, allowing creators and businesses to sell digital products and simple services without needing their own payment gateway integration or enterprise formation.
+
+**Popular MoR Platforms**:
+
+- **Gumroad**: Focused on digital products, courses, and memberships
+- **Payhip**: Similar to Gumroad with strong digital product support
+- **Lemon Squeezy**: Modern platform for digital products and SaaS
+- **Paddle**: Enterprise-focused with global tax handling
+- **SendOwl**: Digital product delivery and sales platform
+
+**How It Works**: Instead of integrating payments into your website, you create selling pages or links on the MoR platform. Customers purchase through the platform's interface, and you receive payouts after the platform deducts their fees and handles taxes.
+
+**Advantages**:
+
+- No payment gateway integration required
+- No enterprise formation needed to start selling
+- Platforms handle tax collection and remittance
+- Built-in digital product delivery systems
+- Global payment processing support
+- Easy setup - create account and start selling immediately
+
+**Disadvantages**:
+
+- Cannot be directly integrated into your website (redirects to platform)
+- Limited to digital products and simple services (e-books, courses, software, etc.)
+- Not suitable for custom subscription plans or complex offerings
+- Platform fees typically 5-10% per transaction
+- Less control over branding and customer experience
+- Dependency on third-party platform policies
+
+**Supported Product Types**:
+
+- Digital downloads (PDFs, MP3, MP4, images, ZIP files)
+- Software and code
+- Online courses and tutorials
+- E-books and templates
+- Digital licenses and access keys
+- Simple consulting deliverables (written reviews, basic documents)
+
+**Not Suitable For**:
+
+- Custom subscription models
+- Physical products
+- Complex service offerings
+- High-volume B2B transactions
+- Products requiring custom pricing logic
+
+**Example Usage**:
+
+```javascript
+// Instead of payment integration, redirect to MoR platform
+function PurchaseButton({ productId }) {
+  const handlePurchase = () => {
+    // Redirect to Gumroad, Payhip, etc.
+    window.location.href = `https://gumroad.com/l/your-product-link`;
+  };
+
+  return <button onClick={handlePurchase}>Buy Now</button>;
+}
+
+// Or embed platform's purchase button
+function EmbeddedPurchase() {
+  useEffect(() => {
+    // Load platform's embed script
+    const script = document.createElement("script");
+    script.src = "https://gumroad.com/js/gumroad-embed.js";
+    document.head.appendChild(script);
+  }, []);
+
+  return (
+    <div
+      className="gumroad-product-embed"
+      data-gumroad-product-id="your_product_id"
+    >
+      <a href="https://gumroad.com/l/your-product">Loading...</a>
+    </div>
+  );
+}
+```
+
+**Payout Process**:
+
+1. Customer completes purchase on platform
+2. Platform processes payment and handles taxes
+3. Platform deducts fees (typically 5-8%)
+4. Funds transferred to your bank account (varies by platform)
+5. Automatic reconciliation and reporting
+
+**Best For**: Quick launch of digital product sales, creators starting online businesses, businesses wanting to avoid payment complexity while focusing on content creation.
+
 ## Comparison Table
 
 | Feature                        | Stripe (US LLC)  | 2Checkout           | PayU Latam             | Mercado Pago           | Libélula                   | AirTM/Takenos + Gateway    |
 | ------------------------------ | ---------------- | ------------------- | ---------------------- | ---------------------- | -------------------------- | -------------------------- |
-| **Bolivia Support**            | No               | Yes                 | Yes                    | Limited                | Yes (Native)               | Yes                        |
+| **Bolivia Support**            | No               | Yes                 | Yes                    | No                     | Yes (Native)               | Yes                        |
 | **Setup Complexity**           | Very High        | Medium              | Medium-High            | Medium                 | Low-Medium                 | Medium                     |
 | **Transaction Fees**           | 2.9% + $0.30     | 3.5% + $0.35        | 3.49-4.99%             | 3.99% + fee            | 2.5%                       | 3-5% total                 |
 | **Technical Integration**      | Easy             | Medium              | Medium                 | Medium                 | Medium (Easy with plugins) | Depends on gateway used    |
 | **Documentation Quality**      | Excellent        | Good                | Fair                   | Good                   | Fair (Spanish)             | N/A (uses others)          |
-| **Time to First Payment**      | 4-8 weeks        | 1-2 weeks           | 2-4 weeks              | 1-2 weeks              | 1-2 weeks                  | 1-3 days                   |
-| **Requires Company Formation** | Yes (US)         | No                  | No                     | No                     | No                         | No                         |
-| **Minimum Requirements**       | US LLC + Bank    | Business docs       | Business docs          | Account + verification | Bolivian business + NIT    | ID + $5 USD                |
+| **Time to First Payment**      | 4-8 weeks        | 1-2 weeks           | 2-4 weeks              | N/A                    | 1-2 weeks                  | 1-3 days                   |
+| **Requires Company Formation** | Yes (US LLC)     | Yes (LLC)           | Yes (LLC)              | Yes (LLC)              | Yes (Bolivian Business)    | Yes (For Gateway)          |
+| **Minimum Requirements**       | US LLC + Bank    | Business docs       | Business docs          | Business docs          | Bolivian business + NIT    | ID + $5 USD + Enterprise   |
 | **Recurring Payments**         | Excellent        | Good                | Good                   | Good                   | Good                       | Manual                     |
 | **Developer Experience**       | Excellent        | Good                | Fair                   | Good                   | Fair                       | N/A                        |
 | **Local Currency Support**     | Limited          | Yes (BOB)           | Yes (BOB)              | Yes (BOB)              | Yes (BOB, USD)             | USD only                   |
@@ -1327,7 +1445,7 @@ sequenceDiagram
 | **Local Payment Methods**      | No               | Limited             | Yes                    | Yes                    | Yes (QR, Tigo Money, etc.) | No                         |
 | **Invoicing Integration**      | No               | No                  | No                     | No                     | Yes (SIN certified)        | No                         |
 | **ASFI Regulated**             | No               | No                  | No                     | No                     | Yes                        | No                         |
-| **Best For**                   | Large operations | International sales | Regional Latin America | Marketplace/C2C        | Bolivian market            | Quick international access |
+| **Best For**                   | Large operations | International sales | Regional Latin America | Regional Latin America | Bolivian market            | Quick international access |
 
 ---
 
@@ -1405,15 +1523,16 @@ While cryptocurrency payments theoretically bypass traditional banking restricti
 
 ## Recommendations
 
-### For Bolivian-Focused Businesses (Best Overall for Local Market)
+### Bolivian Solution (Best Overall for Local Market but also some International payments)
 
 **Recommended Solution**: Libélula
 
-For businesses primarily serving the Bolivian market, Libélula is the optimal choice. As the first and most established multichannel payment gateway in Bolivia with over 450 clients and 360K annual transactions, it offers the lowest fees (2.5%), full ASFI compliance, and native integration with Bolivian payment methods including QR Simple with all major banks, Tigo Money, and e-BISA. The integrated SIN-certified invoicing is a major advantage for tax compliance.
+For businesses primarily serving the Bolivian market, Libélula is the optimal choice. As the first and most established multichannel payment gateway in Bolivia with over 450 clients and 360K annual transactions, it offers the lowest fees (2.5%), full ASFI compliance, and native integration with Bolivian payment methods including QR Simple with all major banks, Tigo Money, e-BISA, and also cards from VISA to allow payments from all the world. The integrated SIN-certified invoicing is a major advantage for tax compliance.
 
 **Implementation Path**:
 
-1. Contact Libélula via libelula.bo or WhatsApp (591-70621222)
+1. Contact Libélula via https://libelula.bo
+   - I already did and they send me three files at: [libelula-docs](../../uploads/libelula-docs/)
 2. Complete registration with Bolivian business documents and NIT
 3. Submit legal representative documentation
 4. Receive API credentials or install CMS plugin (WooCommerce, Magento, etc.)
@@ -1424,37 +1543,53 @@ For businesses primarily serving the Bolivian market, Libélula is the optimal c
 
 ### For Quick Start with Minimal Bureaucracy
 
-**Recommended Solution**: AirTM or Takenos Virtual Cards + Stripe or 2Checkout
+**Recommended Solution**: Merchant of Record Platforms (Gumroad, Payhip, Lemon Squeezy)
 
-This combination provides the fastest path to accepting international payments from Bolivia. We can obtain a virtual card within days and immediately use it with any major payment gateway. While we'll pay slightly higher fees due to the virtual card markup, we avoid the complexity of forming a US company or navigating complex regional payment regulations.
-
-**Implementation Path**:
-
-1. Create AirTM or Takenos account and complete verification (2-3 days)
-2. Request virtual card and load initial balance ($5-10 minimum)
-3. Use virtual card to set up Stripe account (as payment receiver)
-4. Integrate Stripe into our React application
-5. Configure payouts to our AirTM US virtual account number
-6. Withdraw from AirTM to Bolivian bank account as needed
-
-**Total Setup Time**: 1 week. **Total Cost to Start**: $5-10 USD. **Monthly Fees**: Transaction-based only.
-
-### For Direct Bolivia Integration (International Payments)
-
-**Recommended Solution**: 2Checkout (Verifone)
-
-Among international gateways, 2Checkout offers the most straightforward path for Bolivian businesses without requiring US entity formation. While the fees are higher than Stripe, the direct Bolivia support and ability to use local business registration make it the pragmatic choice for businesses that want a proper merchant account for international payments.
+For the absolute fastest way to start selling digital products online without any enterprise formation or payment integration, Merchant of Record platforms offer the easiest path. These platforms handle everything - payments, taxes, and compliance - allowing you to focus solely on creating and delivering your products.
 
 **Implementation Path**:
 
-1. Register business on 2Checkout platform
-2. Submit verification documents (Bolivian business registration, tax ID)
-3. Wait for approval (typically 1-2 weeks)
-4. Obtain API credentials
-5. Integrate using provided SDKs or direct API
-6. Configure bank account for settlements
+1. Choose a platform (Gumroad recommended for simplicity)
+2. Create account with basic information (no business registration required)
+3. Set up your product pages and pricing
+4. Generate selling links or embed purchase buttons
+5. Share links with customers or embed on your website
+6. Receive payouts directly to your bank account
 
-**Total Setup Time**: 2-3 weeks. **Requirements**: Registered business entity, tax documentation.
+**Total Setup Time**: 1 day. **Total Cost to Start**: Free. **Transaction Fees**: 5-8%.
+
+**Alternative**: AirTM or Takenos Virtual Cards + Stripe or 2Checkout (requires enterprise formation)
+
+If you need more control over payment processing and are willing to form an enterprise, this combination provides integration capabilities. However, it still requires mandatory enterprise formation for gateway registration.
+
+**Implementation Path**:
+
+1. Form required enterprise (LLC or Bolivian unipersonal)
+2. Create AirTM or Takenos account and complete verification (2-3 days)
+3. Register with chosen gateway using enterprise credentials
+4. Integrate gateway into your application
+5. Configure payouts to virtual card account
+6. Withdraw to Bolivian bank account
+
+**Total Setup Time**: 2-4 weeks. **Total Cost to Start**: $5-10 USD + enterprise formation costs.
+
+### International Solution
+
+**Recommended Solution**: 2Checkout (Verifone) with LLC Formation
+
+Among international gateways, 2Checkout offers direct Bolivia support but requires formation of an LLC enterprise. While the fees are higher than Stripe, it provides international payment capabilities.
+
+**Implementation Path**:
+
+1. Form LLC enterprise (can be US or other jurisdiction)
+2. Register business on 2Checkout platform using LLC credentials
+3. Submit verification documents (business registration, tax ID)
+4. Wait for approval (typically 1-2 weeks)
+5. Obtain API credentials
+6. Integrate using provided SDKs or direct API
+7. Configure bank account for settlements
+
+**Total Setup Time**: 3-4 weeks. **Requirements**: LLC formation, tax documentation.
 
 ### For Regional Latin American Operations
 
