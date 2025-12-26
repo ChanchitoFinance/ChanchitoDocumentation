@@ -36,6 +36,8 @@ Welcome to the Chanchito project wiki. This project focuses on building a Unifie
 
     - ##### [1.2.1.1. Feature Implementation Feasibility Specification](docs/projects/mvo/artifacts/Feature-Implementation-Feasibility-Specification.md)
 
+    - ##### [1.2.1.2. Database Schema](docs/projects/mvo/artifacts/DatabaseSchema.dbml)
+        
   - #### [1.2.2. General](docs/projects/mvo/general/)
 
     - ##### [1.2.2.1. Project Specification Document](docs/projects/mvo/general/Project-Specification-Document.md)
@@ -47,5 +49,7 @@ Welcome to the Chanchito project wiki. This project focuses on building a Unifie
 ## [3. Spikes](docs/spikes/)
 
 - ### [3.1. Payment Gateways](docs/spikes/payment-gateways.md)
+
+- ### [3.2. Security Insights](docs/spikes/security-insights.md)
 
 ## [4. PoCs](docs/pocs/)
