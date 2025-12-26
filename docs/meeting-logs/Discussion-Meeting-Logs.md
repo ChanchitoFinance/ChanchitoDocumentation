@@ -7,3 +7,5 @@
 ### December
 
 - [2025-12-16 - Restructuring Project Tasks and Welcoming Fernando Pinto](./2025‐12‐16-‐-Restructuring-Project-Tasks-and-Welcoming-Fernando-Pinto.md)
+
+- [2025-12-19 - MVO Weekly Planning](./2025-12-19---Planning.md)
