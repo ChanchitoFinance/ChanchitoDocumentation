@@ -70,4 +70,3 @@ Welcome to the Chanchito project wiki. This project focuses on building a Unifie
 
 - ### [3.2. Security Insights](docs/spikes/security-insights.md)
 
-## [4. PoCs](docs/pocs/)
