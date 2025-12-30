@@ -1058,13 +1058,54 @@ People who must decide before committing money, people, or compliance risk.
 
 # **6. Market Analysis Summary**
 
+## **6.1 Market Research and Industry Context**
+
+The decision intelligence market is experiencing rapid growth, validating the need for platforms that treat decisions as first-class objects. According to MarketsandMarkets research, **the global decision intelligence market is projected to grow from USD 13.3 billion in 2024 to USD 50.1 billion by 2030, representing a CAGR of 24.7%**.
+
+This growth is driven by:
+* Increasing need for AI-based and machine learning-based decision intelligence solutions
+* Demand for tools that optimize operations and strategic decisions
+* Shift from static reporting to actionable decision support
+* Integration of predictive models into business workflows
+
+### **6.1.1 Market Opportunity & Vertical Analysis**
+
+The U.S. SMB software market represents a **$72.35B opportunity (2025)**, with companies spending an average of **$8,700 per employee annually on SaaS**. The decision-validation platform category sits within this multi-billion-dollar ecosystem, with relevant sub-markets including:
+
+* Decision intelligence: $15.2B (2024)
+* Project management: $8.72B (2024)
+* Product management: $5.86B (2024)
+* Objectives/OKR tools: $1.05B (2024)
+
+**Key market insights:**
+* SMBs allocate 2–7% of revenue to IT/software (tech-intensive firms exceed 15%)
+* 58% of SMBs use collaboration tools; 44% use project-management software
+* Owner/CEO influences purchases ~80% of the time in SMBs
+* Sales cycles are shorter in SMBs (weeks vs quarters for enterprise)
+
+**High-potential verticals** (ranked by GTM ease and revenue potential):
+1. **Technology/Software** – Very high ease, very high potential (4.88M firms)
+2. **Professional Services & Agencies** – High ease, high potential (4.88M + 3.86M firms)
+3. **Finance & Accounting** – Moderate ease, moderate potential (1.03M firms)
+4. **Healthcare** – Moderate ease, high potential (2.95M firms)
+5. **Retail & E-Commerce** – Moderate-high ease, high potential (2.81M firms)
+6. **Manufacturing/Logistics** – Lower ease, moderate potential (4.09M + 0.63M firms)
+
+For detailed market opportunity analysis, vertical segmentation, buying behavior, pricing benchmarks, and GTM strategy recommendations, see: [Market Opportunity & GTM Strategy](../artifacts/market/market-opportunity-gtm-strategy.md)
+
+For detailed market research and industry analysis on Decision Intelligence, see: [Decision Intelligence Market Research](../artifacts/market/decision-intelligence-market-research.md)
+
+---
+
+## **6.2 Competitive Differentiation**
+
 The platform differentiates itself by unifying:
 
 * Public idea validation
 * Private enterprise feedback
 * Social engagement mechanics
 * Gamified contribution
-* Investor discovery
+* Decision validation as a first-class product
 
 This creates a unique competitive position but requires precise execution.
 
