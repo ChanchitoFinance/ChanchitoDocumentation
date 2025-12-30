@@ -214,55 +214,55 @@ Our platform proposes to unify these domains while also improving them through p
 
 ## **H. Internal Decision-Making Platforms**
 
-### **Productboard** – Product management platform ($19/maker/mo) that centralizes feedback, scores features, and builds roadmaps. Strengths: Unifies insights with strategy, trusted by large orgs. Weaknesses: Steeper learning curve and cost for small teams; external validation limited to customer portals (no built-in survey/panel).
+- **Productboard** – Product management platform ($19/maker/mo) that centralizes feedback, scores features, and builds roadmaps. Strengths: Unifies insights with strategy, trusted by large orgs. Weaknesses: Steeper learning curve and cost for small teams; external validation limited to customer portals (no built-in survey/panel).
 
-### **Airfocus** – Modular roadmap and prioritization tool (~$69/editor/mo) with customizable scoring templates (RICE, WSJF), Priority Poker gamification, and portfolio management. Strengths: Robust prioritization and reporting. Weaknesses: Expensive and complex for small teams; mainly internal focus (no built-in external survey panel).
+- **Airfocus** – Modular roadmap and prioritization tool (~$69/editor/mo) with customizable scoring templates (RICE, WSJF), Priority Poker gamification, and portfolio management. Strengths: Robust prioritization and reporting. Weaknesses: Expensive and complex for small teams; mainly internal focus (no built-in external survey panel).
 
-### **Aha!** – Roadmap/product management platform (Growth ~$2,997/year) with feature scorecards, customizable ideas portals, and roadmapping. Strengths: Comprehensive feature set; mature for enterprise. Weaknesses: Complex setup and high cost; overkill for early-stage SMBs.
+- **Aha!** – Roadmap/product management platform (Growth ~$2,997/year) with feature scorecards, customizable ideas portals, and roadmapping. Strengths: Comprehensive feature set; mature for enterprise. Weaknesses: Complex setup and high cost; overkill for early-stage SMBs.
 
-### **Roadmunk** – Roadmap software ($19-99/user/mo) with multiple roadmap views, basic idea portals, and priority frameworks. Strengths: Flexible views and simple UI. Weaknesses: Fewer advanced PM features; limited external research (no user panels).
+- **Roadmunk** – Roadmap software ($19-99/user/mo) with multiple roadmap views, basic idea portals, and priority frameworks. Strengths: Flexible views and simple UI. Weaknesses: Fewer advanced PM features; limited external research (no user panels).
 
-### **ProductPlan** – Shared roadmap builder ($39/user/mo) with drag-and-drop roadmaps. Strengths: User-friendly visuals; easy public roadmap publishing. Weaknesses: Lighter on feature prioritization and feedback management (no built-in scoring or user polls).
+- **ProductPlan** – Shared roadmap builder ($39/user/mo) with drag-and-drop roadmaps. Strengths: User-friendly visuals; easy public roadmap publishing. Weaknesses: Lighter on feature prioritization and feedback management (no built-in scoring or user polls).
 
-### **Trello** – Generic Kanban board often repurposed as roadmap. Strengths: Extremely simple; public boards can double as roadmaps. Weaknesses: Minimal built-in decision support (no scoring, analytics, or integrated feedback beyond manual cards).
+- **Trello** – Generic Kanban board often repurposed as roadmap. Strengths: Extremely simple; public boards can double as roadmaps. Weaknesses: Minimal built-in decision support (no scoring, analytics, or integrated feedback beyond manual cards).
 
-### **Jira (with add-ons)** – Agile issue-tracker with plugins for feature-ranking. Strengths: Ubiquitous for dev workflow; highly customizable. Weaknesses: Not built as decision-support tool; requires add-ons for feature scoring; feedback collection is external.
+- **Jira (with add-ons)** – Agile issue-tracker with plugins for feature-ranking. Strengths: Ubiquitous for dev workflow; highly customizable. Weaknesses: Not built as decision-support tool; requires add-ons for feature scoring; feedback collection is external.
 
 ---
 
 ## **I. External Idea-Validation Platforms**
 
-### **PickFu** – Rapid consumer feedback via polls (~$1 per response). Strengths: Very fast results, low barrier. Weaknesses: Small fixed audience (mostly U.S./Amazon shoppers), limited advanced analytics.
+- **PickFu** – Rapid consumer feedback via polls (~$1 per response). Strengths: Very fast results, low barrier. Weaknesses: Small fixed audience (mostly U.S./Amazon shoppers), limited advanced analytics.
 
-### **SurveyMonkey (Momentive)** – General survey tool ($25-99/user/mo). Strengths: Very flexible for any question type; large panel service. Weaknesses: Not specialized for product testing; not community-driven.
+- **SurveyMonkey (Momentive)** – General survey tool ($25-99/user/mo). Strengths: Very flexible for any question type; large panel service. Weaknesses: Not specialized for product testing; not community-driven.
 
-### **Attest** – Consumer insights platform (~$0.50/answer) with global panel across 80+ countries. Strengths: Large international reach; enterprise-level insights. Weaknesses: Costlier than DIY tools; less suited for quick internal alignment polls.
+- **Attest** – Consumer insights platform (~$0.50/answer) with global panel across 80+ countries. Strengths: Large international reach; enterprise-level insights. Weaknesses: Costlier than DIY tools; less suited for quick internal alignment polls.
 
-### **Pollfish** – On-demand survey panel (~$0.95-1.50 per survey). Strengths: Instant reach to thousands; robust data quality. Weaknesses: Can be pricey for high sample sizes; no built-in feedback forum.
+- **Pollfish** – On-demand survey panel (~$0.95-1.50 per survey). Strengths: Instant reach to thousands; robust data quality. Weaknesses: Can be pricey for high sample sizes; no built-in feedback forum.
 
-### **Qualtrics XM** – Enterprise-grade experience management platform (custom pricing, tens of thousands). Strengths: Best-in-class analytics and panel integration. Weaknesses: Overkill/expensive for early-stage teams.
+- **Qualtrics XM** – Enterprise-grade experience management platform (custom pricing, tens of thousands). Strengths: Best-in-class analytics and panel integration. Weaknesses: Overkill/expensive for early-stage teams.
 
-### **Zappi** – Concept and ad testing with large consumer panel (enterprise pricing). Strengths: Specialized market research. Weaknesses: Very expensive; focused only on concept testing (no product management features).
+- **Zappi** – Concept and ad testing with large consumer panel (enterprise pricing). Strengths: Specialized market research. Weaknesses: Very expensive; focused only on concept testing (no product management features).
 
-### **BetaTesting** – Crowdsourced product beta testing (custom pricing, low thousands). Strengths: Real-world app/site testing; high-quality feedback. Weaknesses: More for functional QA than quick survey-style validation; slower turnaround than polls.
+- **BetaTesting** – Crowdsourced product beta testing (custom pricing, low thousands). Strengths: Real-world app/site testing; high-quality feedback. Weaknesses: More for functional QA than quick survey-style validation; slower turnaround than polls.
 
-### **Maze** – Rapid usability testing for designs (~$40/mo). Strengths: Quick user flows, quantitative metrics. Weaknesses: More UX-focused; not a broad survey/panel.
+- **Maze** – Rapid usability testing for designs (~$40/mo). Strengths: Quick user flows, quantitative metrics. Weaknesses: More UX-focused; not a broad survey/panel.
 
 ---
 
 ## **J. Adjacent / Indirect Tools**
 
-### **Canny** – Feedback management & voting board ($19-79/mo). Strengths: Simple feedback capture, prioritization with upvotes. Weaknesses: Mostly customer-driven feedback; limited in-depth research tools.
+- **Canny** – Feedback management & voting board ($19-79/mo). Strengths: Simple feedback capture, prioritization with upvotes. Weaknesses: Mostly customer-driven feedback; limited in-depth research tools.
 
-### **Savio** – Centralizes feature requests from support/CRM ($39-249/mo). Strengths: Ties feedback to revenue from CRM data. Weaknesses: Focused on internal support feedback; no broad consumer panel.
+- **Savio** – Centralizes feature requests from support/CRM ($39-249/mo). Strengths: Ties feedback to revenue from CRM data. Weaknesses: Focused on internal support feedback; no broad consumer panel.
 
-### **Frill** – Lightweight feature request board ($25-49/mo). Strengths: Very affordable, easy branding. Weaknesses: Minimal beyond feedback (no deep prioritization analytics); no built-in user research.
+- **Frill** – Lightweight feature request board ($25-49/mo). Strengths: Very affordable, easy branding. Weaknesses: Minimal beyond feedback (no deep prioritization analytics); no built-in user research.
 
-### **Ideanote** – Employee idea management with campaigns, voting, leaderboards (enterprise-oriented). Strengths: Used by 100+ orgs. Weaknesses: Enterprise-focused; not customer-facing.
+- **Ideanote** – Employee idea management with campaigns, voting, leaderboards (enterprise-oriented). Strengths: Used by 100+ orgs. Weaknesses: Enterprise-focused; not customer-facing.
 
-### **FeatureUpvote** – Simple upvote board for internal suggestions ($49/mo) with Slack/MS Teams integration. Strengths: Removes spreadsheets/email strings. Weaknesses: Basic internal voting only.
+- **FeatureUpvote** – Simple upvote board for internal suggestions ($49/mo) with Slack/MS Teams integration. Strengths: Removes spreadsheets/email strings. Weaknesses: Basic internal voting only.
 
-### **Loomio** – Group decision-making platform (consent, voting, discussions). Strengths: Open-source/free; used by cooperatives, NGOs, remote teams. Weaknesses: Not tailored for decision validation workflows.
+- **Loomio** – Group decision-making platform (consent, voting, discussions). Strengths: Open-source/free; used by cooperatives, NGOs, remote teams. Weaknesses: Not tailored for decision validation workflows.
 
 ---
 
@@ -467,23 +467,103 @@ This fragmentation and gap creates an opportunity for a platform that brings tog
 
 ---
 
-# **2.4 Opportunity: A New Category—Social Validation Networks**
+# **2.4 Opportunity: A New Category—Decision-as-a-Product**
 
-Based on competitor gaps, there is a clear market opening for a platform that:
+## **2.4.1 The Core Problem: Decisions Are Invisible**
 
-### ✔ Provides **real-time validation signals** (swipes, votes, vibes)
-### ✔ Offers **continuous idea discovery** (infinite feeds)
-### ✔ Creates **comfortable, safe emotional space** for idea sharing
-### ✔ Delivers **personalized matching** between users and ideas
-### ✔ Builds **public traction & visibility** for founders
-### ✔ Enables **company & team posting**
-### ✔ Offers **AI-guided insights**
-### ✔ Includes **gamification layers**
-### ✔ Unifies **social interaction + validation analytics**
+Most existing tools do not treat decisions as a first-class problem.
 
-No current tool or competitor comes close to achieving this combination.
+They sell inputs or artifacts around decisions:
 
-This becomes our differentiated advantage.
+* **Roadmaps** → visual representations of chosen work
+* **Feedback tools** → collections of opinions and requests
+* **Surveys** → raw signals without synthesis
+* **Voting systems** → popularity metrics, not correctness
+* **Meetings** → verbal alignment with no durable memory
+
+In all of these, **the decision itself is invisible**. It happens informally, often in someone's head, Slack thread, or meeting room.
+
+---
+
+## **2.4.2 What We Sell: Decision Validation**
+
+We treat the decision as the core product object.
+
+A decision is explicitly:
+
+* **Defined** – Clear statement of what is being decided
+* **Contextualized** – Understanding of scope, constraints, and stakeholders
+* **Challenged** – Assumptions are surfaced and questioned
+* **Validated** – Internal alignment and external evidence are gathered
+* **Recorded** – Rationale, assumptions, and expected outcomes are documented
+* **Learned from** – Actual outcomes are compared against expectations
+
+Instead of asking "What do people think?", the system asks:
+
+* What decision are we making?
+* What assumptions must be true?
+* What evidence supports or contradicts them?
+* How confident are we, and why?
+* What did we expect to happen?
+* What actually happened?
+
+This reframes the job-to-be-done from:
+
+**"Collect feedback and align stakeholders"**
+
+to:
+
+**"Reduce the risk and cost of making the wrong decision."**
+
+---
+
+## **2.4.3 Why This Is a Category Shift**
+
+Feedback, surveys, and roadmaps are **tools**. Decision validation is **infrastructure**.
+
+**Tools optimize activity** → Decision validation **optimizes outcomes**
+
+Where other products help teams talk more, we help teams **decide better**.
+
+Where others optimize for engagement or visibility, we optimize for **accuracy, clarity, and learning**.
+
+---
+
+## **2.4.4 Structural Consequences of This Shift**
+
+Because decisions are the product:
+
+* **Validation happens before execution**, not after failure
+* **Evidence is weighted** over opinion
+* **Bias is reduced by design**, not by culture alone
+* **Decisions accumulate** into institutional memory
+* **Learning compounds** across time and teams
+
+This creates switching costs that feedback or roadmap tools cannot match — because once decisions, assumptions, and outcomes live in one system, removing it means losing the organization's decision history.
+
+---
+
+## **2.4.5 Why Competitors Can't Easily Copy This**
+
+Most competitors are built around:
+
+* Backlogs
+* Requests
+* Projects
+* Messages
+
+Their data models, workflows, and mental models assume the decision is **implicit**.
+
+Making decisions explicit would require:
+
+* Re-architecting core objects
+* Redesigning workflows
+* Re-educating their market
+* Cannibalizing existing positioning
+
+We are not adding a feature — we are **defining a new unit of value**.
+
+This becomes our differentiated advantage and creates a defensible moat through organizational decision memory and learning loops.
 
 ---
 
