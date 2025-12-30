@@ -36,9 +36,29 @@ Welcome to the Chanchito project wiki. This project focuses on building a Unifie
 
     - ##### [1.2.1.1. Feature Implementation Feasibility Specification](docs/projects/mvo/artifacts/Feature-Implementation-Feasibility-Specification.md)
 
+    - ##### [1.2.1.2. Database Schema](docs/projects/mvo/artifacts/DatabaseSchema.dbml)
+    
+    - ##### [1.2.1.3. Playbooks](docs/projects/mvo/artifacts/playbooks/)
+
+      - ###### [1.2.1.3.1. Hypothesis Matrix](docs/projects/mvo/artifacts/playbooks/hypothesis-matrix.md)
+      
+      - ###### [1.2.1.3.2. Niche Exploration](docs/projects/mvo/artifacts/playbooks/niche-exploration.md)
+         
   - #### [1.2.2. General](docs/projects/mvo/general/)
 
-    - ##### [1.2.2.1. Project Specification Document](docs/projects/mvo/general/Project-Specification-Document.md)
+    - ##### [1.2.2.1. MVO Platform Philosophy](docs/projects/mvo/general/MVO-Platform-Philosophy.md)
+
+    - ##### [1.2.2.2. Project Specification Document](docs/projects/mvo/general/Project-Specification-Document.md)
+    
+    - ##### [1.2.2.3. Data Insights Ingestion](docs/projects/mvo/general/data-insights-ingestion/)
+
+      - ###### [1.2.2.3.1. Event Model](docs/projects/mvo/general/data-insights-ingestion/event-model.md)
+      
+      - ###### [1.2.2.3.2. Scoring and Gates](docs/projects/mvo/general/data-insights-ingestion/scoring-and-gates.md)
+      
+      - ###### [1.2.2.3.3. Visibility and Outputs](docs/projects/mvo/general/data-insights-ingestion/visibility-and-outputs.md)
+      
+      - ###### [1.2.2.3.4. README](docs/projects/mvo/general/data-insights-ingestion/README.md)
 
 ## [2. Meeting Logs](docs/meeting-logs/)
 
@@ -48,4 +68,5 @@ Welcome to the Chanchito project wiki. This project focuses on building a Unifie
 
 - ### [3.1. Payment Gateways](docs/spikes/payment-gateways.md)
 
-## [4. PoCs](docs/pocs/)
+- ### [3.2. Security Insights](docs/spikes/security-insights.md)
+
