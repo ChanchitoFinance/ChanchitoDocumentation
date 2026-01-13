@@ -1873,6 +1873,8 @@ console.log("Checkout URL:", checkout.data.attributes.url);
 
 ## Discarded Solutions
 
+The following technologies and tools were discarded for this research:
+
 ### Square
 
 Square requires a US-based business with a US bank account and a physical presence (address verification). While technically possible through US LLC formation similar to Stripe, Square's focus on point-of-sale systems and in-person payments makes it less attractive for online-only Bolivian businesses. The platform lacks Bolivia support and offers no advantages over Stripe for our use case.
@@ -1896,18 +1898,6 @@ Similar to Google Pay, Apple Pay is not a standalone payment gateway but a payme
 Skrill is a digital wallet that once served individual freelancers well, but now requires business verification and merchant registration for receiving payments regularly. The platform has strict limits on personal accounts and mandatory upgrade to business accounts for commercial activity. **Requires business formation and merchant ID**.
 
 **Reason for Exclusion**: Requires business upgrade for commercial use, mandatory merchant registration, no longer suitable for individuals.
-
-### Payoneer
-
-Payoneer is now documented in the **Global Payout Platforms** section. While it doesn't require business registration for individual accounts and officially supports Bolivia, it is **discarded as a payment gateway solution** for website checkout because:
-
-1. **No simple checkout integration** for individuals - the Checkout API requires partnership agreements not available to individual merchants
-2. **Payment request system adds friction** - customers must receive email, click link, and then pay (not suitable for e-commerce)
-3. **Not designed for e-commerce transactions** - optimized for marketplace income and invoicing instead
-
-However, Payoneer is **EXCELLENT for**: marketplace sellers, freelancers invoicing clients, and managing international income. See the Global Payout Platforms section for full details.
-
-**Reason for Exclusion as Payment Gateway**: No direct checkout integration for individuals, unsuitable for website e-commerce despite not requiring business formation.
 
 ### Wise (formerly TransferWise)
 
